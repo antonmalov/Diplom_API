@@ -1,5 +1,6 @@
 package stellarburgers.tests;
 
+import io.qameta.allure.restassured.AllureRestAssured;
 import jdk.jfr.Description;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -7,12 +8,14 @@ import stellarburgers.models.CreateResponseModel;
 import stellarburgers.models.CreateUserModel;
 import stellarburgers.models.UserGenerator;
 
+import static io.qameta.allure.Allure.step;
 import static io.restassured.RestAssured.get;
 import static io.restassured.RestAssured.given;
 import static io.restassured.http.ContentType.JSON;
 import static org.hamcrest.Matchers.hasKey;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static stellarburgers.helpers.CustomAllureListener.withCustomTemplates;
 
 public class CreateUserTests {
 
@@ -36,19 +39,25 @@ public class CreateUserTests {
     public void successfulCreateUser() {
         CreateUserModel createData = UserGenerator.getRandomUser();
 
-        CreateResponseModel responseModel = given()
-                .log().uri()
-                .log().body()
-                .contentType(JSON)
-                .body(createData)
-                .when()
-                .post("https://stellarburgers.nomoreparties.site/api/auth/register")
-                .then()
-                .log().status()
-                .log().body()
-                .statusCode(200)
-                .extract().as(CreateResponseModel.class);
+        CreateResponseModel responseModel = step("Создание пользователя", () ->
+                given()
+                        .log().uri()
+                        .log().body()
+                        .filter(withCustomTemplates())
+                        .contentType(JSON)
+                        .body(createData)
+                        .when()
+                        .post("https://stellarburgers.nomoreparties.site/api/auth/register")
+                        .then()
+                        .log().status()
+                        .log().body()
+                        .statusCode(200)
+                        .extract().as(CreateResponseModel.class));
 
-        assertEquals(createData.getEmail(), responseModel.getUser().getEmail());
+        step("проверка результата", () -> {
+            assertEquals(createData.getEmail(), responseModel.getUser().getEmail());
+            assertEquals(createData.getName(), responseModel.getUser().getName());
+        });
+
     }
 }
