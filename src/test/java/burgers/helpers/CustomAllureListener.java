@@ -1,4 +1,4 @@
-package stellarburgers.helpers;
+package burgers.helpers;
 
 import io.qameta.allure.restassured.AllureRestAssured;
 

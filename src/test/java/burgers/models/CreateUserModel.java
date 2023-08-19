@@ -1,4 +1,4 @@
-package stellarburgers.models;
+package burgers.models;
 
 import lombok.Data;
 
