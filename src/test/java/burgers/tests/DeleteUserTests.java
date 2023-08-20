@@ -5,14 +5,14 @@ import burgers.models.DeleteUserResponseModel;
 import burgers.models.UserGenerator;
 import jdk.jfr.Description;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-
 import static burgers.specs.CreateUserSpec.*;
 import static io.qameta.allure.Allure.step;
 import static io.restassured.RestAssured.given;
-import static io.restassured.http.ContentType.JSON;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@Tag("api")
 public class DeleteUserTests {
 
     @Test
